@@ -1,0 +1,35 @@
+:root {
+  --bg: #07090f;
+  --panel: #111620;
+  --line: rgba(255,255,255,.11);
+  --ink: #f2f5fa;
+  --dim: rgba(242,245,250,.67);
+  --faint: rgba(242,245,250,.43);
+  --pulse: #ff4d6a;
+  --volt: #3dffc8;
+  --ion: #a98cff;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; color: var(--ink); background: radial-gradient(circle at 80% 0, rgba(122,92,255,.12), transparent 30%), var(--bg); font: 16px/1.65 Manrope, Inter, ui-sans-serif, system-ui, sans-serif; }
+.doc-nav { position: sticky; top: 0; z-index: 3; display: flex; justify-content: space-between; gap: 18px; padding: 14px 24px; border-bottom: 1px solid var(--line); background: rgba(7,9,15,.88); backdrop-filter: blur(18px); }
+.doc-nav a { color: var(--dim); text-decoration: none; font-size: 14px; }
+.doc-nav a:first-child { color: var(--pulse); font-weight: 850; letter-spacing: -.03em; }
+main { width: min(880px, calc(100% - 36px)); margin: 0 auto; padding: 64px 0 96px; }
+h1 { max-width: 760px; margin: 0 0 28px; font-size: clamp(38px, 6vw, 64px); line-height: 1.02; letter-spacing: -.055em; }
+h2 { margin: 56px 0 16px; color: var(--ink); font-size: 27px; line-height: 1.15; letter-spacing: -.035em; }
+h3 { margin: 32px 0 12px; font-size: 20px; }
+p, li { color: var(--dim); }
+strong { color: var(--ink); }
+a { color: var(--volt); }
+blockquote { margin: 22px 0; border: 1px solid rgba(122,92,255,.35); border-left: 3px solid var(--ion); border-radius: 18px; background: linear-gradient(135deg, rgba(122,92,255,.14), rgba(255,255,255,.035)); padding: 18px 22px; }
+blockquote p { margin: 0; color: var(--ink); font-size: 17px; }
+table { width: 100%; margin: 22px 0 36px; border-collapse: separate; border-spacing: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.035); font-size: 14px; }
+th, td { padding: 13px 14px; text-align: left; vertical-align: top; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+th:last-child, td:last-child { border-right: 0; }
+tr:last-child td { border-bottom: 0; }
+th { color: var(--ink); background: rgba(255,255,255,.055); }
+td { color: var(--dim); }
+code { color: var(--volt); }
+hr { border: 0; border-top: 1px solid var(--line); margin: 44px 0; }
+@media (max-width: 720px) { .doc-nav { padding: 12px 18px; } main { padding-top: 42px; } table { display: block; overflow-x: auto; } th,td { min-width: 160px; } }
