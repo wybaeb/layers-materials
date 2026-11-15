@@ -36,7 +36,18 @@
     <section class="panel codepanel">
       <div class="browserbar"><span class="traffic"><i></i><i></i><i></i></span><span class="address">launcher.layers · defense · prompt.md</span></div>
       <div class="codehead"><div class="tabs"><button data-mode="template">Шаблон</button><button data-mode="filled" class="active">Заполненный промпт</button></div><button class="copy" data-copy="mainPrompt">Скопировать</button></div>
-      <pre id="mainPrompt"></pre>
+      <pre id="mainPrompt">Работай в папке проекта: не указана — начни поиск в текущей папке проекта.
+
+Задача: собери презентацию для защиты и интерактивный explainer к ней. Оба артефакта — в одном стиле с продуктом.
+
+Укажи или самостоятельно найди дизайн-систему, Hi‑Fi прототип, посадочную страницу и остальные материалы. Не выдумывай отсутствующие данные.
+
+Результат: слайды, текст выступления и интерактивный explainer в explainer/index.html с ручным листанием, клавиатурой, голосом, автопроигрыванием и кнопкой «Explainer / Стоп».
+
+Ориентиры: https://wybaeb.github.io/pulse-showcase/presentation.html
+Кодовый пример курса: https://git.lab.karpov.courses/devproductdesignai/layers-students/-/tree/master/prototypes/pulse_iteration
+
+Заполненный промпт появляется здесь сразу; поля слева уточняют пути.</pre>
     </section>
   </div>
 
@@ -76,11 +87,12 @@ const TEMPLATE=`Работай в папке проекта: {{FOLDER}}.
 4. Речь: текст выступления к каждому слайду, сорок–пятьдесят секунд на слайд, итого до пяти минут.
 5. Интерактивный explainer: создай самостоятельный HTML, а не MP4 и не PDF. В нём те же слайды, ручное листание кликом и клавиатурой, точки навигации, кнопка «Explainer / Стоп», включение системного голоса и автопереход после реплики. Кнопка должна позволять остановить и продолжить показ с текущего слайда. Текст речи хранится отдельно по слайдам; темп средний, числа проговариваются разборчиво.
 6. Ориентир по механике: https://wybaeb.github.io/pulse-showcase/presentation.html. Не копируй оттуда текст, числа или изображения; повтори только понятную модель управления.
+7. Кодовый ориентир курса: https://git.lab.karpov.courses/devproductdesignai/layers-students/-/tree/master/prototypes/pulse_iteration. Используй его только для структуры проекта и локального запуска; содержание собери из текущей папки проекта.
 
 РЕЗУЛЬТАТ (в папке проекта):
 - слайды презентации, готовые к показу;
 - текст выступления;
-- интерактивный explainer в `explainer/index.html` и сценарий речи с таймкодами.
+- интерактивный explainer в explainer/index.html и сценарий речи с таймкодами.
 
 Критерий готовности: защита читается по слайдам без голоса; explainer понятен слушателю без контекста с первого раза, а все элементы управления проверены мышью и клавиатурой.`;
 function filled(){
@@ -93,12 +105,12 @@ function filled(){
     '{{MATERIALS}}':val('#materials','не указаны — проверь проект на метрики, финансовую модель, исследования и карту экранов'),
     '{{PRODUCT}}':val('#product','[название продукта] — [одна фраза о продукте]')};
   const filledFields=Object.values(values).filter(v=>!v.includes('не указан')&&!v.includes('не указана')&&!v.startsWith('[')).length;
-  $('#status').textContent='Заполнено полей: '+filledFields+'. Незаданные пути агент ищет сам.';
+  const status=$('#status'); if(status) status.textContent='Заполнено полей: '+filledFields+'. Незаданные пути агент ищет сам.';
   return Object.entries(values).reduce((text,[token,value])=>text.replace(token,value),TEMPLATE);
 }
 const pre=$('#mainPrompt');let mode='filled';
 function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
-function render(){const content=mode==='filled'?filled():TEMPLATE;pre.innerHTML=esc(content).replace(/(\/[^\n]+|\[[^\]]+\]|не указа[^\n,;.]*)/g,'<mark>$1</mark>')}
+function render(){if(!pre)return;const content=mode==='filled'?filled():TEMPLATE;pre.innerHTML=esc(content).replace(/(\/[^\n]+|\[[^\]]+\]|не указа[^\n,;.]*)/g,'<mark>$1</mark>')}
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode;render()});
 ['folder','design','prototype','landing','materials','product'].forEach(id=>{const el=document.getElementById(id);el.addEventListener('input',render);el.addEventListener('change',render)});
 document.querySelector('[data-copy]').onclick=async()=>{const plain=mode==='filled'?filled():TEMPLATE;try{await navigator.clipboard.writeText(plain)}catch(e){const r=document.createRange();r.selectNodeContents(pre);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);document.execCommand('copy');sel.removeAllRanges()}const t=$('#toast');t.textContent='Промпт скопирован — передайте его агенту';t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,2200)};
